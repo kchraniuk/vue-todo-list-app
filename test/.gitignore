@@ -1,0 +1,17 @@
+node_modules
+public
+coverage
+obj
+bin
+
+yarn.lock
+.vscode
+.nyc_output
+.DS_Store
+coverage
+content
+
+*.rej
+*.orig
+
+npm-debug.log
