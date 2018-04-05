@@ -1,0 +1,32 @@
+{
+  "tasks": [
+    {
+      "description": "Lorem ipsum dolor",
+      "status": true
+    },
+    {
+      "description": "Cras pharetra",
+      "status": true
+    },
+    {
+      "description": "Donec sapien ligula",
+      "status": false
+    },
+    {
+      "description": "Vivamus porta vulputate finibus",
+      "status": true
+    },
+    {
+      "description": "Sed nisi turpis",
+      "status": true
+    },
+    {
+      "description": "Phasellus consectetur ullamcorper",
+      "status": false
+    },
+    {
+      "description": "Nunc vitae ligula eget enim",
+      "status": false
+    }
+  ]
+}

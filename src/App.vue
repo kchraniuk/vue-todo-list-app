@@ -16,10 +16,13 @@
     data: function () {
       return {
         tasks: [
-          { description: 'task 1', status: true },
-          { description: 'task 2', status: true },
-          { description: 'task 3', status: false },
-          { description: 'task 4', status: false }
+          { description: 'Lorem ipsum dolor', status: true },
+          { description: 'Cras pharetra', status: true },
+          { description: 'Donec sapien ligula', status: false },
+          { description: 'Vivamus porta vulputate finibus', status: true },
+          { description: 'Sed nisi turpis', status: true },
+          { description: 'Phasellus consectetur ullamcorper', status: false },
+          { description: 'Nunc vitae ligula eget enim', status: false }
         ]
       }
     },
