@@ -8,6 +8,7 @@
 </template>
 
 <script>
+  import axios from 'axios'
   import search from '@/components/search'
   import newTask from '@/components/addNewTask'
 
@@ -15,20 +16,22 @@
     name: 'App',
     data: function () {
       return {
-        tasks: [
-          { description: 'Lorem ipsum dolor', status: true },
-          { description: 'Cras pharetra', status: true },
-          { description: 'Donec sapien ligula', status: false },
-          { description: 'Vivamus porta vulputate finibus', status: true },
-          { description: 'Sed nisi turpis', status: true },
-          { description: 'Phasellus consectetur ullamcorper', status: false },
-          { description: 'Nunc vitae ligula eget enim', status: false }
-        ]
+        tasks: []
       }
     },
     components: {
       search,
       newTask
+    },
+    mounted() {
+      this.getTasks()
+    },
+    methods: {
+      getTasks() {
+        axios.get('http://localhost:3000/tasks').then(response => {
+          this.tasks = response.data
+        })
+      }
     }
   }
 </script>

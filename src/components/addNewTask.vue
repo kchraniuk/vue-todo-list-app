@@ -8,17 +8,26 @@
 </template>
 
 <script>
+  import axios from 'axios'
+
   export default {
     name: 'newTask',
     methods: {
-      addNewTask (task){
+      addNewTask (task) {
 
-        if(task.length > 1) {
-          this.tasks.push({
-            description: task,
-            status: false
-          })
+        if ( task.length > 1 ) {
+           let newTask = { 'description': task, 'status': false }           
+           this.addTask( newTask )
         }
+      },
+      
+      addTask( data ) {
+        axios.post( 'http://localhost:3000/tasks', data, { 
+          headers: {'Content-Type': 'application/json'} 
+        })
+        .then( response => {
+          this.tasks.push( data )
+        })
       }
     },
     data() {
