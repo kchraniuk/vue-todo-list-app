@@ -21,7 +21,7 @@
           class="item">
             {{ task.description }} - {{ task.status ? translation.done : translation.todo }}
 
-            <button v-on:click="changeStatus(key)">
+            <button v-on:click="changeStatus(task)">
               {{translation.changeOn}} {{ task.status ? translation.todo : translation.done }}
             </button>
             <button v-on:click="removeTask(key)">
@@ -35,7 +35,7 @@
     </section>
 
     <section class="newTask">
-      <form @submit.prevent="addTask(newTaskModel)">
+      <form @submit.prevent="addNewTask(newTaskModel)">
           <input type="text" v-model="newTaskModel" :placeholder="translation.newTaskPlaceholder" />
           <button :disabled="newTaskModel.length < 1" type="submit">
             {{translation.addNew}}
@@ -49,13 +49,22 @@
 </template>
 
 <script>
-  import axios from 'axios'
+
   export default {
-   
+
     name: 'App',
     data () {
       return {
-        tasks: [],       
+        tasks: [
+          { description: 'Lorem ipsum dolor', status: true },
+          { description: 'Cras pharetra', status: true },
+          { description: 'Donec sapien ligula', status: false },
+          { description: 'Vivamus porta vulputate finibus', status: true },
+          { description: 'Sed nisi turpis', status: true },
+          { description: 'Phasellus consectetur ullamcorper', status: false },
+          { description: 'Nunc vitae ligula eget enim', status: false }
+        ],
+        
         search: '',
         newTaskModel: '',
         translation: {
@@ -70,9 +79,6 @@
         }
       }
     },
-    mounted() {
-     this.getTasks()
-  },
     computed: {
       find() {
         return this.tasks.filter(data => {
@@ -81,35 +87,22 @@
       }
     },
     methods: {
-      changeStatus ( key ) {
-        // const stat = !this.tasks[key].status
-        // axios.put('http://localhost:3000/tasks/'+this.tasks[key].id+'/status/', {'status': stat})
-        //   .then( response => {
-        //     this.tasks[key].status = stat
-        //   })
+      changeStatus (task) {
+        task.status = !task.status
       },
-      getTasks () {
-          axios.get('http://localhost:3000/tasks')
-            .then(response => {
-              this.tasks = response.data
-            })
-        
-      },
-      addTask ( task ) {
-        const data = {'description': task, 'status': false }
-        axios.post( 'http://localhost:3000/tasks', data, {  headers: {'Content-Type': 'application/json'} })
-          .then( response => {
-            this.tasks.push( response.data )
+      addNewTask (task) {
+        if(task.length > 1) {
+          this.tasks.push({
+            description: task,
+            status: false
           })
+        }
       },
-      removeTask ( key ) {
-        axios.delete('http://localhost:3000/tasks/'+this.tasks[key].id, { headers: {'Content-Type': 'application/json'} })
-          .then( response => {
-            this.tasks.splice(key, 1);
-          })
-    }
+      removeTask (key) {
+        this.tasks.splice(key, 1);
+      }
+  },
   }
-}
 </script>
 
 <style lang="sass">
