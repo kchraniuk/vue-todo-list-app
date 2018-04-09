@@ -16,17 +16,15 @@
       addNewTask (task) {
 
         if ( task.length > 1 ) {
-           let newTask = { 'description': task, 'status': false }           
+           let newTask = { 'description': task, 'status': false }
            this.addTask( newTask )
         }
       },
-      
+
       addTask( data ) {
-        axios.post( 'http://localhost:3000/tasks', data, { 
-          headers: {'Content-Type': 'application/json'} 
-        })
+        axios.post( 'http://localhost:3000/tasks', data, {  headers: {'Content-Type': 'application/json'} })
         .then( response => {
-          this.tasks.push( data )
+          this.tasks.push( response.data )
         })
       }
     },

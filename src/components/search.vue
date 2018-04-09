@@ -29,20 +29,16 @@
     props: {
       tasks: {required: true}
     },
-    // watch: {
-    //   search(newVal, oldVal) {
-    //     this.$emit('searchChange', newVal)
-    //   }
-    // },
-    methods : {
-
-    },
     computed: {
       find() {
-        const filteredData = this.tasks.filter(data => {
-         return data.description.toLowerCase().includes(this.search.toLowerCase());
+        return this.filterTask()
+      }
+    },
+    methods: {
+      filterTask: function(list = this.tasks) {
+         return list.filter(data => {
+          return data.description.toLowerCase().includes(this.search.toLowerCase());
         });
-        return filteredData
       }
     }
   }

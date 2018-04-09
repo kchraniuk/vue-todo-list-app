@@ -28,9 +28,10 @@
     },
     methods: {
       getTasks() {
-        axios.get('http://localhost:3000/tasks').then(response => {
-          this.tasks = response.data
-        })
+        axios.get('http://localhost:3000/tasks')
+          .then(response => {
+            this.tasks = response.data
+          })
       }
     }
   }

@@ -11,10 +11,14 @@
           <button v-on:click="changeStatus(task)">
             {{translation.changeOn}} {{ task.status ? translation.todo : translation.done }}
           </button>
-          <button v-on:click="removeTask(key)">{{translation.remove}}</button>
+          <button v-on:click="removeTask(key, task.id)">
+            {{translation.remove}}
+          </button>
       </li>
     </ul>
-    <div v-show="search.length > 0 && tasks.length === 0">{{translation.notfound}} <strong>{{search}}</strong></div>
+    <div v-show="search.length > 0 && tasks.length === 0">
+      {{translation.notfound}} <strong>{{search}}</strong>
+    </div>
   </section>
 </template>
 
@@ -35,13 +39,15 @@ export default {
     }
   },
   methods: {
+
     changeStatus (task) {
       task.status = !task.status
     },
-    removeTask (key) {
-      axios.delete('http://localhost:3000/tasks/'+tasks[key].id)
+
+    removeTask (key, idItem) {
+      axios.delete('http://localhost:3000/tasks/'+idItem, { headers: {'Content-Type': 'application/json'} })
         .then( response => {
-          this.$delete(tasks, key);
+           this.tasks.splice(key, 1);
         })
     }
   },
