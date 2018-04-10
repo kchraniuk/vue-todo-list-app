@@ -47,6 +47,8 @@ export default {
   methods: {
     changeStatus (task) {
       task.status = !task.status
+      const body = {'id': task.id, 'status': task.status, 'description': task.description};
+      this.axiosUpdateStatus(task.id, body)
     },
     removeTask (idItem) {
       this.axiosRemoveTask(idItem)

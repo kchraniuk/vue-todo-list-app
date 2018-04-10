@@ -16,6 +16,9 @@ export default {
     },
     axiosRemoveTask: function (idItem) {
       return axios.delete(this.baseUrl + idItem, this.headersSettings)
+    },
+    axiosUpdateStatus: function (idItem, body) {
+      return axios.put(this.baseUrl + idItem, body)
     }
   }
 }
