@@ -1,25 +1,24 @@
 <template>
   <section class="search">
     <div>
-        <input
-          type="text"
-          name="search"
-          id="search"
-          v-model="search"
-          :placeholder="searchPlaceholder" />
+      <input
+        type="text"
+        v-model="search"
+        :placeholder="translation.searchPlaceholder" />
     </div>
-    <tasksList :tasks="find" :search="this.search"/>
+   <tasksList :tasks="tasks" :search="search"/>
   </section>
 </template>
 
 <script>
   import tasksList from '@/components/todo-list.vue'
+  import translation from '@/components/translation'
 
   export default {
+    mixins: [translation],
     name: 'Search',
     data() {
       return {
-        searchPlaceholder: 'tape the task name',
         search: ''
       }
     },
@@ -28,18 +27,6 @@
     },
     props: {
       tasks: {required: true}
-    },
-    computed: {
-      find() {
-        return this.filterTask()
-      }
-    },
-    methods: {
-      filterTask: function(list = this.tasks) {
-         return list.filter(data => {
-          return data.description.toLowerCase().includes(this.search.toLowerCase());
-        });
-      }
     }
   }
 </script>

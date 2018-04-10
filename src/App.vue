@@ -8,11 +8,12 @@
 </template>
 
 <script>
-  import axios from 'axios'
-  import search from '@/components/search'
-  import newTask from '@/components/addNewTask'
+  import ajaxCalls from '@/components/ajaxCalls.js';
+  import search from '@/components/search';
+  import newTask from '@/components/addNewTask';
 
   export default {
+    extends: ajaxCalls,
     name: 'App',
     data: function () {
       return {
@@ -24,15 +25,10 @@
       newTask
     },
     mounted() {
-      this.getTasks()
-    },
-    methods: {
-      getTasks() {
-        axios.get('http://localhost:3000/tasks')
+      this.axiosGetTasks()
           .then(response => {
             this.tasks = response.data
           })
-      }
     }
   }
 </script>

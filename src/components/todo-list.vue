@@ -2,53 +2,58 @@
   <section id="tasks-list">
     <ul>
       <li
-        v-for="(task, key) in tasks"
+        v-for="(task) in filteredTasksList"
         v-bind:description="task.description"
-        :key="key"
+        :key="task.id"
         class="item">
           {{ task.description }} - {{ task.status ? translation.done : translation.todo }}
 
           <button v-on:click="changeStatus(task)">
             {{translation.changeOn}} {{ task.status ? translation.todo : translation.done }}
           </button>
-          <button v-on:click="removeTask(key, task.id)">
+          <button v-on:click="removeTask(task.id)">
             {{translation.remove}}
           </button>
       </li>
     </ul>
-    <div v-show="search.length > 0 && tasks.length === 0">
-      {{translation.notfound}} <strong>{{search}}</strong>
+
+    <div class="no-result-info" v-show="search.length > 0 && filteredTasksList.length === 0">
+        {{translation.notfound}} <strong>{{search}}</strong>
     </div>
+
   </section>
 </template>
 
 <script>
-import axios from 'axios'
+import ajaxCalls from '@/components/ajaxCalls'
+import translation from '@/components/translation'
 
 export default {
+  extends: ajaxCalls,
+  mixins: [translation],
   name: 'tasks-list',
   data: function() {
     return {
-      translation:{
-          changeOn: 'change status on: ',
-          done: 'done',
-          todo: 'to do',
-          remove: 'remove',
-          notfound: 'Unfortunately, there are no results for '
-      }
+      filteredTasks: [],
+    }
+  },
+  computed: {
+    filteredTasksList () {
+      return this.tasks.filter(data => {
+        return data.description.toLowerCase().includes(this.search.toLowerCase());
+      });
     }
   },
   methods: {
-
     changeStatus (task) {
       task.status = !task.status
     },
-
-    removeTask (key, idItem) {
-      axios.delete('http://localhost:3000/tasks/'+idItem, { headers: {'Content-Type': 'application/json'} })
-        .then( response => {
-           this.tasks.splice(key, 1);
-        })
+    removeTask (idItem) {
+      this.axiosRemoveTask(idItem)
+          .then(response => {
+            let index = this.tasks.indexOf(idItem);
+            this.tasks.splice(index, 1);
+          })
     }
   },
   props: {

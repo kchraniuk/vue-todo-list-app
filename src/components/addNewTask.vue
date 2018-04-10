@@ -1,41 +1,37 @@
 <template>
   <section class="newTask">
-    <form @submit.prevent="addNewTask(newTaskModel)">
-        <input type="text" v-model="newTaskModel" :placeholder="newTaskPlaceholder" />
-        <button :disabled="newTaskModel.length < 1" type="submit">Add new</button>
+    <form @submit.prevent="addTask(newTaskModel)">
+        <input type="text" v-model="newTaskModel" :placeholder="translation.newTaskPlaceholder" />
+        <button :disabled="newTaskModel.length < 1" type="submit">{{translation.add}}</button>
     </form>
   </section>
 </template>
 
 <script>
-  import axios from 'axios'
+  import ajaxCalls from '@/components/ajaxCalls'
+  import translation from '@/components/translation'
 
   export default {
+    extends: ajaxCalls,
+    mixins: [translation],
     name: 'newTask',
-    methods: {
-      addNewTask (task) {
-
-        if ( task.length > 1 ) {
-           let newTask = { 'description': task, 'status': false }
-           this.addTask( newTask )
-        }
-      },
-
-      addTask( data ) {
-        axios.post( 'http://localhost:3000/tasks', data, {  headers: {'Content-Type': 'application/json'} })
-        .then( response => {
-          this.tasks.push( response.data )
-        })
-      }
-    },
     data() {
       return {
         newTaskModel: '',
-        newTaskPlaceholder: 'Enter the task name'
       }
     },
     props: {
       tasks: {required: true}
+    },
+    methods: {
+      addTask(data) {
+        const newTask = { 'description': data, 'status': false };
+        this.axiosAddTask(newTask)
+            .then( response => {
+              this.tasks.push(response.data);
+              this.newTaskModel = '';
+            })
+      }
     }
   }
 </script>
