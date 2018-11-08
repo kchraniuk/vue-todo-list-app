@@ -1,17 +1,18 @@
 <template>
   <section class="search">
     <div>
+      <!-- v-model is just syntactic sugar for: <input v-bind:value="something" v-on:input="something = $event.target.value"> -->
       <input
         type="text"
+        v-on:input="searchHandler"
         v-model="search"
-        :placeholder="translation.searchPlaceholder" />
+        :placeholder="translation.searchPlaceholder"
+      />
     </div>
-   <tasksList :tasks="tasks" :search="search"/>
   </section>
 </template>
 
 <script>
-  import tasksList from '@/components/todo-list.vue'
   import translation from '@/components/translation'
 
   export default {
@@ -22,12 +23,12 @@
         search: ''
       }
     },
-    components: {
-      tasksList
-    },
-    props: {
-      tasks: {required: true}
+    methods: {
+      searchHandler (value) {
+        this.$emit('emitSearchValue', this.search);
+      }
     }
+
   }
 </script>
 

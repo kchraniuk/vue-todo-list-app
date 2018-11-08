@@ -1,66 +1,68 @@
 <template>
   <section id="tasks-list">
     <ul>
-      <li
-        v-for="(task) in filteredTasksList"
-        v-bind:description="task.description"
-        :key="task.id"
-        class="item">
-          {{ task.description }} - {{ task.status ? translation.done : translation.todo }}
-
-          <button v-on:click="changeStatus(task)">
-            {{translation.changeOn}} {{ task.status ? translation.todo : translation.done }}
-          </button>
-          <button v-on:click="removeTask(task.id)">
-            {{translation.remove}}
-          </button>
-      </li>
+      <task
+        v-for="(item, index) in filteredTasksList"
+        v-bind:key="item.id"
+        v-bind:index="index"
+        v-bind:item="item"
+        v-bind:tasks="tasks"
+        v-bind:editState="editState"
+        v-bind:changeEditState="setEditState"
+      />
     </ul>
-
-    <div class="no-result-info" v-show="search.length > 0 && filteredTasksList.length === 0">
-        {{translation.notfound}} <strong>{{search}}</strong>
-    </div>
-
+    <noResultInfo
+      :search="search"
+      :filteredTasksList="filteredTasksList"
+    />
   </section>
 </template>
 
 <script>
-import ajaxCalls from '@/components/ajaxCalls'
 import translation from '@/components/translation'
+import task from '@/components/task'
+import noResultInfo from '@/components/noResultInfo'
+import helpers from '@/components/helpers'
 
 export default {
-  extends: ajaxCalls,
-  mixins: [translation],
+  mixins: [helpers, translation],
   name: 'tasks-list',
-  data: function() {
+
+  components: {
+    task,
+    noResultInfo,
+  },
+  data() {
     return {
-      filteredTasks: [],
+      editState: false
     }
   },
   computed: {
+
     filteredTasksList () {
-      return this.tasks.filter(data => {
+      const filteredData = this.tasks.filter(data => {
         return data.description.toLowerCase().includes(this.search.toLowerCase());
       });
-    }
-  },
-  methods: {
-    changeStatus (task) {
-      task.status = !task.status
-      const body = {'id': task.id, 'status': task.status, 'description': task.description};
-      this.axiosUpdateStatus(task.id, body)
+      return this.sortData(filteredData, 'dateAdded', 'desc');
     },
-    removeTask (idItem) {
-      this.axiosRemoveTask(idItem)
-          .then(response => {
-            let index = this.tasks.indexOf(idItem);
-            this.tasks.splice(index, 1);
-          })
-    }
+
   },
+
   props: {
-     tasks: {required: true},
-     search: {required: true}
+     tasks: {
+       type: Array,
+       required: true
+     },
+     search: {
+       type: String,
+       required: true
+     }
+  },
+
+  methods: {
+    setEditState(value) {
+      this.editState = value;
+    }
   }
 }
 </script>

@@ -1,8 +1,15 @@
 <template>
   <section class="newTask">
-    <form @submit.prevent="addTask(newTaskModel)">
-        <input type="text" v-model="newTaskModel" :placeholder="translation.newTaskPlaceholder" />
-        <button :disabled="newTaskModel.length < 1" type="submit">{{translation.add}}</button>
+    <form
+      @submit.prevent="addTask(newTaskModel)"
+    >
+        <input type="text"
+          v-model="newTaskModel"
+          :placeholder="translation.newTaskPlaceholder"
+        />
+        <button type="submit"
+          :disabled="newTaskModel.length < 1"
+        >{{translation.add}}</button>
     </form>
   </section>
 </template>
@@ -10,10 +17,11 @@
 <script>
   import ajaxCalls from '@/components/ajaxCalls'
   import translation from '@/components/translation'
+  import helpers from '@/components/helpers'
 
   export default {
     extends: ajaxCalls,
-    mixins: [translation],
+    mixins: [translation, helpers],
     name: 'newTask',
     data() {
       return {
@@ -21,11 +29,22 @@
       }
     },
     props: {
-      tasks: {required: true}
+      tasks: {
+        type: Array,
+        required: true
+      }
     },
     methods: {
-      addTask(data) {
-        const newTask = { 'description': data, 'status': false };
+
+      addTask(data, dateStart = null, dateEnd = null) {
+        const newTask = {
+          'description': data,
+          'status': false,
+          'dateAdded': this.setCurentTimestamp(),
+          'dateStart': dateStart,
+          'dateEnd': dateEnd
+        };
+
         this.axiosAddTask(newTask)
             .then( response => {
               this.tasks.push(response.data);

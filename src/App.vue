@@ -1,34 +1,50 @@
 <template>
   <div id="app">
-    <!-- <search :tasks="tasks" @searchChange="searchValueChanged" /> -->
-    <search :tasks="tasks" />
-    <newTask :tasks="tasks" />
-    <div></div>
+    <search
+      v-on:emitSearchValue="updateSearch($event)"
+    />
+    <tasksList
+      :tasks="tasks"
+      :search="search"
+    />
+    <newTask
+      :tasks="tasks"
+    />
   </div>
 </template>
 
 <script>
+
   import ajaxCalls from '@/components/ajaxCalls.js';
   import search from '@/components/search';
   import newTask from '@/components/addNewTask';
+  import tasksList from '@/components/todo-list.vue';
 
   export default {
     extends: ajaxCalls,
     name: 'App',
-    data: function () {
+    data() {
       return {
-        tasks: []
+        tasks: [],
+        search: '',
+        searchOptions: false
       }
     },
     components: {
       search,
-      newTask
+      newTask,
+      tasksList
     },
     mounted() {
       this.axiosGetTasks()
           .then(response => {
             this.tasks = response.data
           })
+    },
+    methods: {
+      updateSearch (updatedSearchValue) {
+        this.search = updatedSearchValue;
+      }
     }
   }
 </script>
